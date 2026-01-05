@@ -6,6 +6,8 @@ import { ReservaRepository } from '../../infrastructure/repositories/reserva.rep
 
 import { EspacioRepository } from '../../infrastructure/repositories/espacio.repository';
 
+import { PoliticasServicio } from '../services/politicas.service';
+
 import { CrearReservaDto } from '../dtos/crear-reserva.dto';
 
 @Injectable()
@@ -18,9 +20,29 @@ export class CrearReserva {
 
     private espacioRepository: EspacioRepository,
 
+    private politicasServicio: PoliticasServicio,
+
   ) {}
 
   async ejecutar(dto: CrearReservaDto): Promise<void> {
+
+    const ahora = new Date();
+
+    const antelacionHoras = (dto.fechaInicio.getTime() - ahora.getTime()) / (1000 * 60 * 60);
+
+    if (antelacionHoras < this.politicasServicio.obtenerMinAntelacion()) {
+
+      throw new Error('La reserva debe hacerse con al menos ' + this.politicasServicio.obtenerMinAntelacion() + ' horas de antelación');
+
+    }
+
+    const duracionHoras = (dto.fechaFin.getTime() - dto.fechaInicio.getTime()) / (1000 * 60 * 60);
+
+    if (duracionHoras > this.politicasServicio.obtenerMaxDuracion()) {
+
+      throw new Error('La duración máxima permitida es ' + this.politicasServicio.obtenerMaxDuracion() + ' horas');
+
+    }
 
     const espacio = await this.espacioRepository.encontrarPorId(dto.espacioId);
 

@@ -6,6 +6,8 @@ import { ReservaController } from '../controllers/reserva.controller';
 
 import { EspacioController } from '../controllers/espacio.controller';
 
+import { ReportesController } from '../controllers/reportes.controller';
+
 import { RegistrarUsuario } from '../../application/use-cases/registrar-usuario.use-case';
 
 import { IniciarSesion } from '../../application/use-cases/iniciar-sesion.use-case';
@@ -18,6 +20,10 @@ import { CrearEspacio } from '../../application/use-cases/crear-espacio.use-case
 
 import { ListarEspacios } from '../../application/use-cases/listar-espacios.use-case';
 
+import { GenerarReportes } from '../../application/use-cases/generar-reportes.use-case';
+
+import { PoliticasServicio } from '../../application/services/politicas.service';
+
 import { UsuarioRepository } from '../../infrastructure/repositories/usuario.repository';
 
 import { ReservaRepository } from '../../infrastructure/repositories/reserva.repository';
@@ -26,9 +32,9 @@ import { EspacioRepository } from '../../infrastructure/repositories/espacio.rep
 
 @Module({
 
-  controllers: [AuthController, ReservaController, EspacioController],
+  controllers: [AuthController, ReservaController, EspacioController, ReportesController],
 
-  providers: [RegistrarUsuario, IniciarSesion, CrearReserva, AprobarReserva, CrearEspacio, ListarEspacios, UsuarioRepository, ReservaRepository, EspacioRepository],
+  providers: [RegistrarUsuario, IniciarSesion, CrearReserva, AprobarReserva, CrearEspacio, ListarEspacios, GenerarReportes, PoliticasServicio, UsuarioRepository, ReservaRepository, EspacioRepository],
 
 })
 

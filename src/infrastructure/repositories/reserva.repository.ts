@@ -28,6 +28,12 @@ export class ReservaRepository implements ReservaRepositorio {
 
   }
 
+  async encontrarTodas(): Promise<Reserva[]> {
+
+    return this.reservas;
+
+  }
+
   async guardar(reserva: Reserva): Promise<void> {
 
     this.reservas.push(reserva);
