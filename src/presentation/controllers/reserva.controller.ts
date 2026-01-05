@@ -1,8 +1,10 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Get, Body, Param } from '@nestjs/common';
 
 import { CrearReserva } from '../../application/use-cases/crear-reserva.use-case';
 
 import { AprobarReserva } from '../../application/use-cases/aprobar-reserva.use-case';
+
+import { ReservaRepository } from '../../infrastructure/repositories/reserva.repository';
 
 import { CrearReservaDto } from '../../application/dtos/crear-reserva.dto';
 
@@ -17,6 +19,8 @@ export class ReservaController {
     private crearReserva: CrearReserva,
 
     private aprobarReserva: AprobarReserva,
+
+    private reservaRepository: ReservaRepository,
 
   ) {}
 
@@ -37,6 +41,14 @@ export class ReservaController {
     await this.aprobarReserva.ejecutar(dto);
 
     return { message: 'Reserva aprobada' };
+
+  }
+
+  @Get('usuario/:usuarioId')
+
+  async obtenerPorUsuario(@Param('usuarioId') usuarioId: string) {
+
+    return await this.reservaRepository.encontrarPorUsuarioId(usuarioId);
 
   }
 
