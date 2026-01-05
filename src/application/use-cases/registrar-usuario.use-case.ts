@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
+import * as bcrypt from 'bcrypt';
+
 import { Usuario } from '../../domain/entities/usuario.entity';
 
 import { UsuarioRepository } from '../../infrastructure/repositories/usuario.repository';
@@ -44,7 +46,9 @@ export class RegistrarUsuario {
 
   private async hashContrasena(contrasena: string): Promise<string> {
 
-    return contrasena;
+    const saltRounds = 10;
+
+    return bcrypt.hash(contrasena, saltRounds);
 
   }
 
