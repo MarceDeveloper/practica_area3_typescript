@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
+import * as fs from 'fs';
+
 import { Espacio } from '../../domain/entities/espacio.entity';
 
 import { EspacioRepositorio } from '../../domain/interfaces/espacio-repository.interface';
@@ -8,7 +10,31 @@ import { EspacioRepositorio } from '../../domain/interfaces/espacio-repository.i
 
 export class EspacioRepository implements EspacioRepositorio {
 
-  private espacios: Espacio[] = [];
+  private filePath = 'espacios.json';
+
+  private espacios: Espacio[] = this.loadFromFile();
+
+  private loadFromFile(): Espacio[] {
+
+    try {
+
+      const data = fs.readFileSync(this.filePath, 'utf8');
+
+      return JSON.parse(data);
+
+    } catch {
+
+      return [];
+
+    }
+
+  }
+
+  private saveToFile() {
+
+    fs.writeFileSync(this.filePath, JSON.stringify(this.espacios, null, 2));
+
+  }
 
   async encontrarPorId(id: string): Promise<Espacio | null> {
 
@@ -26,6 +52,8 @@ export class EspacioRepository implements EspacioRepositorio {
 
     this.espacios.push(espacio);
 
+    this.saveToFile();
+
   }
 
   async actualizar(espacio: Espacio): Promise<void> {
@@ -36,6 +64,8 @@ export class EspacioRepository implements EspacioRepositorio {
 
       this.espacios[index] = espacio;
 
+      this.saveToFile();
+
     }
 
   }
@@ -43,6 +73,8 @@ export class EspacioRepository implements EspacioRepositorio {
   async eliminar(id: string): Promise<void> {
 
     this.espacios = this.espacios.filter(e => e.id !== id);
+
+    this.saveToFile();
 
   }
 

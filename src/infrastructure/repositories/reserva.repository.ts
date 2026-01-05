@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
+import * as fs from 'fs';
+
 import { Reserva } from '../../domain/entities/reserva.entity';
 
 import { ReservaRepositorio } from '../../domain/interfaces/reserva-repository.interface';
@@ -8,7 +10,41 @@ import { ReservaRepositorio } from '../../domain/interfaces/reserva-repository.i
 
 export class ReservaRepository implements ReservaRepositorio {
 
-  private reservas: Reserva[] = [];
+  private filePath = 'reservas.json';
+
+  private reservas: Reserva[] = this.loadFromFile();
+
+  private loadFromFile(): Reserva[] {
+
+    try {
+
+      const data = fs.readFileSync(this.filePath, 'utf8');
+
+      return JSON.parse(data, (key, value) => {
+
+        if (key === 'fechaInicio' || key === 'fechaFin') {
+
+          return new Date(value);
+
+        }
+
+        return value;
+
+      });
+
+    } catch {
+
+      return [];
+
+    }
+
+  }
+
+  private saveToFile() {
+
+    fs.writeFileSync(this.filePath, JSON.stringify(this.reservas, null, 2));
+
+  }
 
   async encontrarPorId(id: string): Promise<Reserva | null> {
 
@@ -38,6 +74,8 @@ export class ReservaRepository implements ReservaRepositorio {
 
     this.reservas.push(reserva);
 
+    this.saveToFile();
+
   }
 
   async actualizar(reserva: Reserva): Promise<void> {
@@ -48,6 +86,8 @@ export class ReservaRepository implements ReservaRepositorio {
 
       this.reservas[index] = reserva;
 
+      this.saveToFile();
+
     }
 
   }
@@ -55,6 +95,8 @@ export class ReservaRepository implements ReservaRepositorio {
   async eliminar(id: string): Promise<void> {
 
     this.reservas = this.reservas.filter(r => r.id !== id);
+
+    this.saveToFile();
 
   }
 
