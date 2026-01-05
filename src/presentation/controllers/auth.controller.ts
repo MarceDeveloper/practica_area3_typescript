@@ -1,8 +1,10 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Get, Body } from '@nestjs/common';
 
 import { RegistrarUsuario } from '../../application/use-cases/registrar-usuario.use-case';
 
 import { IniciarSesion } from '../../application/use-cases/iniciar-sesion.use-case';
+
+import { ListarUsuarios } from '../../application/use-cases/listar-usuarios.use-case';
 
 import { CrearUsuarioDto } from '../../application/dtos/crear-usuario.dto';
 
@@ -17,6 +19,8 @@ export class AuthController {
     private registrarUsuario: RegistrarUsuario,
 
     private iniciarSesion: IniciarSesion,
+
+    private listarUsuarios: ListarUsuarios,
 
   ) {}
 
@@ -43,6 +47,14 @@ export class AuthController {
     }
 
     return { message: 'Sesion iniciada', usuarioId: usuario.id };
+
+  }
+
+  @Get('users')
+
+  async listar() {
+
+    return await this.listarUsuarios.ejecutar();
 
   }
 

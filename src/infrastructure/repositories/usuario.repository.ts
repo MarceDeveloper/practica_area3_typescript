@@ -22,6 +22,12 @@ export class UsuarioRepository implements UsuarioRepositorio {
 
   }
 
+  async encontrarTodos(): Promise<Usuario[]> {
+
+    return this.usuarios;
+
+  }
+
   async guardar(usuario: Usuario): Promise<void> {
 
     this.usuarios.push(usuario);
