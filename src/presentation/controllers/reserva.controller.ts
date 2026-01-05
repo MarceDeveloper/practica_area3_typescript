@@ -4,7 +4,7 @@ import { CrearReserva } from '../../application/use-cases/crear-reserva.use-case
 
 import { AprobarReserva } from '../../application/use-cases/aprobar-reserva.use-case';
 
-import { ReservaRepository } from '../../infrastructure/repositories/reserva.repository';
+import { ListarReservasPorUsuario } from '../../application/use-cases/listar-reservas-por-usuario.use-case';
 
 import { CrearReservaDto } from '../../application/dtos/crear-reserva.dto';
 
@@ -20,7 +20,7 @@ export class ReservaController {
 
     private aprobarReserva: AprobarReserva,
 
-    private reservaRepository: ReservaRepository,
+    private listarReservasPorUsuario: ListarReservasPorUsuario,
 
   ) {}
 
@@ -48,7 +48,7 @@ export class ReservaController {
 
   async obtenerPorUsuario(@Param('usuarioId') usuarioId: string) {
 
-    return await this.reservaRepository.encontrarPorUsuarioId(usuarioId);
+    return await this.listarReservasPorUsuario.ejecutar(usuarioId);
 
   }
 

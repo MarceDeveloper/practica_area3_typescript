@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 
 import { Reserva } from '../../domain/entities/reserva.entity';
 
@@ -26,13 +26,25 @@ export class CrearReserva {
 
   async ejecutar(dto: CrearReservaDto): Promise<void> {
 
+    if (isNaN(dto.fechaInicio.getTime()) || isNaN(dto.fechaFin.getTime())) {
+
+      throw new BadRequestException('Fechas inválidas');
+
+    }
+
+    if (dto.fechaFin <= dto.fechaInicio) {
+
+      throw new BadRequestException('La fecha de fin debe ser posterior a la fecha de inicio');
+
+    }
+
     const ahora = new Date();
 
     const antelacionHoras = (dto.fechaInicio.getTime() - ahora.getTime()) / (1000 * 60 * 60);
 
     if (antelacionHoras < this.politicasServicio.obtenerMinAntelacion()) {
 
-      throw new Error('La reserva debe hacerse con al menos ' + this.politicasServicio.obtenerMinAntelacion() + ' horas de antelación');
+      throw new BadRequestException('La reserva debe hacerse con al menos ' + this.politicasServicio.obtenerMinAntelacion() + ' horas de antelación');
 
     }
 
@@ -40,7 +52,7 @@ export class CrearReserva {
 
     if (duracionHoras > this.politicasServicio.obtenerMaxDuracion()) {
 
-      throw new Error('La duración máxima permitida es ' + this.politicasServicio.obtenerMaxDuracion() + ' horas');
+      throw new BadRequestException('La duración máxima permitida es ' + this.politicasServicio.obtenerMaxDuracion() + ' horas');
 
     }
 
@@ -48,7 +60,7 @@ export class CrearReserva {
 
     if (!espacio) {
 
-      throw new Error('Espacio no encontrado');
+      throw new BadRequestException('Espacio no encontrado');
 
     }
 
@@ -62,7 +74,7 @@ export class CrearReserva {
 
     if (hayConflicto) {
 
-      throw new Error('Espacio no disponible en ese horario');
+      throw new BadRequestException('Espacio no disponible en ese horario');
 
     }
 

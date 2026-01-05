@@ -5,7 +5,7 @@ import { SreoModule } from './presentation/modules/sreo.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(SreoModule);
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
   const config = new DocumentBuilder()
     .setTitle('SREO API')
     .setDescription('API para Sistema de Reservas de Espacios de Oficina')

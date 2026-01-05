@@ -18,6 +18,8 @@ import { CrearReserva } from '../../application/use-cases/crear-reserva.use-case
 
 import { AprobarReserva } from '../../application/use-cases/aprobar-reserva.use-case';
 
+import { ListarReservasPorUsuario } from '../../application/use-cases/listar-reservas-por-usuario.use-case';
+
 import { CrearEspacio } from '../../application/use-cases/crear-espacio.use-case';
 
 import { ListarEspacios } from '../../application/use-cases/listar-espacios.use-case';
@@ -38,7 +40,7 @@ import { EspacioRepository } from '../../infrastructure/repositories/espacio.rep
 
   controllers: [AuthController, ReservaController, EspacioController, ReportesController],
 
-  providers: [RegistrarUsuario, IniciarSesion, ListarUsuarios, CrearReserva, AprobarReserva, CrearEspacio, ListarEspacios, GenerarReportes, PoliticasServicio, EmailServicio, UsuarioRepository, ReservaRepository, EspacioRepository],
+  providers: [RegistrarUsuario, IniciarSesion, ListarUsuarios, CrearReserva, AprobarReserva, ListarReservasPorUsuario, CrearEspacio, ListarEspacios, GenerarReportes, PoliticasServicio, EmailServicio, UsuarioRepository, ReservaRepository, EspacioRepository],
 
 })
 

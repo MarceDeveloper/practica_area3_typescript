@@ -9,8 +9,8 @@ Este documento cubre únicamente el desarrollo del backend utilizando NestJS con
 Para garantizar la escalabilidad y el cumplimiento de los Requisitos No Funcionales, el proyecto se divide en:
 - **Domain:** Entidades de negocio, interfaces de repositorios y lógica de dominio.
 - **Application:** Casos de uso (servicios de aplicación), DTOs y lógica de aplicación.
-- **Infrastructure:** Implementación de Base de Datos (Entity Framework), servicios externos y notificaciones.
-- **Presentation:** API REST (ASP.NET Core Web API).
+- **Infrastructure:** Implementación de Base de Datos (Prisma), servicios externos y notificaciones.
+- **Presentation:** API REST (NestJS).
 
 ## 📂 Estructura de Directorios (Backend NestJS)
 ```
@@ -77,7 +77,7 @@ src/
 ## 📝 Commits Definidos
 
 ### Sprint 1: Funcionalidad Core
-- feat: configurar proyecto NestJS con Clean Architecture
+- feat: configurar proyecto NestJS con Clean Architecture y Swagger
 - feat: implementar entidades de dominio (Usuario, Espacio, Reserva)
 - feat: implementar gestión de acceso (HU-01)
 - feat: implementar realización de reserva (HU-04)

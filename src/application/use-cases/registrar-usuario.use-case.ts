@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 
 import * as bcrypt from 'bcrypt';
 
@@ -20,7 +20,7 @@ export class RegistrarUsuario {
 
     if (usuarioExistente) {
 
-      throw new Error('Usuario ya existe');
+      throw new BadRequestException('Usuario ya existe');
 
     }
 
