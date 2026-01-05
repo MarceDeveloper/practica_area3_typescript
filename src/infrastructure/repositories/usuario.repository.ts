@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import * as fs from 'fs';
+import { PrismaClient } from '@prisma/client';
 
 import { Usuario } from '../../domain/entities/usuario.entity';
 
@@ -10,55 +10,51 @@ import { UsuarioRepositorio } from '../../domain/interfaces/usuario-repository.i
 
 export class UsuarioRepository implements UsuarioRepositorio {
 
-  private filePath = 'usuarios.json';
-
-  private usuarios: Usuario[] = this.loadFromFile();
-
-  private loadFromFile(): Usuario[] {
-
-    try {
-
-      const data = fs.readFileSync(this.filePath, 'utf8');
-
-      return JSON.parse(data);
-
-    } catch {
-
-      return [];
-
-    }
-
-  }
-
-  private saveToFile() {
-
-    fs.writeFileSync(this.filePath, JSON.stringify(this.usuarios, null, 2));
-
-  }
+  private prisma = new PrismaClient();
 
   async encontrarPorId(id: string): Promise<Usuario | null> {
 
-    return this.usuarios.find(u => u.id === id) || null;
+    const user = await this.prisma.usuario.findUnique({ where: { id } });
+
+    return user ? new Usuario(user.id, user.nombre, user.email, user.contrasenaHash, user.rol) : null;
 
   }
 
   async encontrarPorEmail(email: string): Promise<Usuario | null> {
 
-    return this.usuarios.find(u => u.email === email) || null;
+    const user = await this.prisma.usuario.findUnique({ where: { email } });
+
+    return user ? new Usuario(user.id, user.nombre, user.email, user.contrasenaHash, user.rol) : null;
 
   }
 
   async encontrarTodos(): Promise<Usuario[]> {
 
-    return this.usuarios;
+    const users = await this.prisma.usuario.findMany();
+
+    return users.map(u => new Usuario(u.id, u.nombre, u.email, u.contrasenaHash, u.rol));
 
   }
 
   async guardar(usuario: Usuario): Promise<void> {
 
-    this.usuarios.push(usuario);
+    await this.prisma.usuario.create({
 
-    this.saveToFile();
+      data: {
+
+        id: usuario.id,
+
+        nombre: usuario.nombre,
+
+        email: usuario.email,
+
+        contrasenaHash: usuario.contrasenaHash,
+
+        rol: usuario.rol,
+
+      },
+
+    });
 
   }
 

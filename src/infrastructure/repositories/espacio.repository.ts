@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import * as fs from 'fs';
+import { PrismaClient } from '@prisma/client';
 
 import { Espacio } from '../../domain/entities/espacio.entity';
 
@@ -10,71 +10,71 @@ import { EspacioRepositorio } from '../../domain/interfaces/espacio-repository.i
 
 export class EspacioRepository implements EspacioRepositorio {
 
-  private filePath = 'espacios.json';
-
-  private espacios: Espacio[] = this.loadFromFile();
-
-  private loadFromFile(): Espacio[] {
-
-    try {
-
-      const data = fs.readFileSync(this.filePath, 'utf8');
-
-      return JSON.parse(data);
-
-    } catch {
-
-      return [];
-
-    }
-
-  }
-
-  private saveToFile() {
-
-    fs.writeFileSync(this.filePath, JSON.stringify(this.espacios, null, 2));
-
-  }
+  private prisma = new PrismaClient();
 
   async encontrarPorId(id: string): Promise<Espacio | null> {
 
-    return this.espacios.find(e => e.id === id) || null;
+    const espacio = await this.prisma.espacio.findUnique({ where: { id } });
+
+    return espacio ? new Espacio(espacio.id, espacio.nombre, espacio.capacidad, espacio.tipo, espacio.descripcion) : null;
 
   }
 
   async encontrarTodos(): Promise<Espacio[]> {
 
-    return this.espacios;
+    const espacios = await this.prisma.espacio.findMany();
+
+    return espacios.map(e => new Espacio(e.id, e.nombre, e.capacidad, e.tipo, e.descripcion));
 
   }
 
   async guardar(espacio: Espacio): Promise<void> {
 
-    this.espacios.push(espacio);
+    await this.prisma.espacio.create({
 
-    this.saveToFile();
+      data: {
+
+        id: espacio.id,
+
+        nombre: espacio.nombre,
+
+        capacidad: espacio.capacidad,
+
+        tipo: espacio.tipo,
+
+        descripcion: espacio.descripcion,
+
+      },
+
+    });
 
   }
 
   async actualizar(espacio: Espacio): Promise<void> {
 
-    const index = this.espacios.findIndex(e => e.id === espacio.id);
+    await this.prisma.espacio.update({
 
-    if (index !== -1) {
+      where: { id: espacio.id },
 
-      this.espacios[index] = espacio;
+      data: {
 
-      this.saveToFile();
+        nombre: espacio.nombre,
 
-    }
+        capacidad: espacio.capacidad,
+
+        tipo: espacio.tipo,
+
+        descripcion: espacio.descripcion,
+
+      },
+
+    });
 
   }
 
   async eliminar(id: string): Promise<void> {
 
-    this.espacios = this.espacios.filter(e => e.id !== id);
-
-    this.saveToFile();
+    await this.prisma.espacio.delete({ where: { id } });
 
   }
 

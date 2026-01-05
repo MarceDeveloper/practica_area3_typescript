@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import * as fs from 'fs';
+import { PrismaClient } from '@prisma/client';
 
 import { Reserva } from '../../domain/entities/reserva.entity';
 
@@ -10,93 +10,91 @@ import { ReservaRepositorio } from '../../domain/interfaces/reserva-repository.i
 
 export class ReservaRepository implements ReservaRepositorio {
 
-  private filePath = 'reservas.json';
-
-  private reservas: Reserva[] = this.loadFromFile();
-
-  private loadFromFile(): Reserva[] {
-
-    try {
-
-      const data = fs.readFileSync(this.filePath, 'utf8');
-
-      return JSON.parse(data, (key, value) => {
-
-        if (key === 'fechaInicio' || key === 'fechaFin') {
-
-          return new Date(value);
-
-        }
-
-        return value;
-
-      });
-
-    } catch {
-
-      return [];
-
-    }
-
-  }
-
-  private saveToFile() {
-
-    fs.writeFileSync(this.filePath, JSON.stringify(this.reservas, null, 2));
-
-  }
+  private prisma = new PrismaClient();
 
   async encontrarPorId(id: string): Promise<Reserva | null> {
 
-    return this.reservas.find(r => r.id === id) || null;
+    const reserva = await this.prisma.reserva.findUnique({ where: { id } });
+
+    return reserva ? new Reserva(reserva.id, reserva.usuarioId, reserva.espacioId, reserva.fechaInicio, reserva.fechaFin, reserva.estado) : null;
 
   }
 
   async encontrarPorUsuarioId(usuarioId: string): Promise<Reserva[]> {
 
-    return this.reservas.filter(r => r.usuarioId === usuarioId);
+    const reservas = await this.prisma.reserva.findMany({ where: { usuarioId } });
+
+    return reservas.map(r => new Reserva(r.id, r.usuarioId, r.espacioId, r.fechaInicio, r.fechaFin, r.estado));
 
   }
 
   async encontrarPorEspacioId(espacioId: string): Promise<Reserva[]> {
 
-    return this.reservas.filter(r => r.espacioId === espacioId);
+    const reservas = await this.prisma.reserva.findMany({ where: { espacioId } });
+
+    return reservas.map(r => new Reserva(r.id, r.usuarioId, r.espacioId, r.fechaInicio, r.fechaFin, r.estado));
 
   }
 
   async encontrarTodas(): Promise<Reserva[]> {
 
-    return this.reservas;
+    const reservas = await this.prisma.reserva.findMany();
+
+    return reservas.map(r => new Reserva(r.id, r.usuarioId, r.espacioId, r.fechaInicio, r.fechaFin, r.estado));
 
   }
 
   async guardar(reserva: Reserva): Promise<void> {
 
-    this.reservas.push(reserva);
+    await this.prisma.reserva.create({
 
-    this.saveToFile();
+      data: {
+
+        id: reserva.id,
+
+        usuarioId: reserva.usuarioId,
+
+        espacioId: reserva.espacioId,
+
+        fechaInicio: reserva.fechaInicio,
+
+        fechaFin: reserva.fechaFin,
+
+        estado: reserva.estado,
+
+      },
+
+    });
 
   }
 
   async actualizar(reserva: Reserva): Promise<void> {
 
-    const index = this.reservas.findIndex(r => r.id === reserva.id);
+    await this.prisma.reserva.update({
 
-    if (index !== -1) {
+      where: { id: reserva.id },
 
-      this.reservas[index] = reserva;
+      data: {
 
-      this.saveToFile();
+        usuarioId: reserva.usuarioId,
 
-    }
+        espacioId: reserva.espacioId,
+
+        fechaInicio: reserva.fechaInicio,
+
+        fechaFin: reserva.fechaFin,
+
+        estado: reserva.estado,
+
+      },
+
+    });
 
   }
 
   async eliminar(id: string): Promise<void> {
 
-    this.reservas = this.reservas.filter(r => r.id !== id);
-
-    this.saveToFile();
+    await this.prisma.reserva.delete({ where: { id } });
 
   }
 
