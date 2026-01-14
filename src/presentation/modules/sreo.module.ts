@@ -8,6 +8,8 @@ import { EspacioController } from '../controllers/espacio.controller';
 
 import { ReportesController } from '../controllers/reportes.controller';
 
+import { UsuariosController } from '../controllers/usuarios.controller';
+
 import { RegistrarUsuario } from '../../application/use-cases/registrar-usuario.use-case';
 
 import { IniciarSesion } from '../../application/use-cases/iniciar-sesion.use-case';
@@ -56,7 +58,7 @@ import { EspacioRepository } from '../../infrastructure/repositories/espacio.rep
 
 @Module({
 
-  controllers: [AuthController, ReservaController, EspacioController, ReportesController],
+  controllers: [AuthController, ReservaController, EspacioController, ReportesController, UsuariosController],
 
   providers: [RegistrarUsuario, IniciarSesion, ObtenerPerfil, ListarUsuarios, EditarUsuario, EliminarUsuario, CambiarContrasena, CrearReserva, AprobarReserva, RechazarReserva, CancelarReserva, ListarReservasPorUsuario, ListarReservas, CrearEspacio, ListarEspacios, EditarEspacio, EliminarEspacio, GenerarReportes, PoliticasServicio, EmailServicio, UsuarioRepository, ReservaRepository, EspacioRepository],
 
