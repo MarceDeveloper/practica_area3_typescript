@@ -22,7 +22,7 @@ export class CancelarReserva {
 
     }
 
-    if (reservaExistente.estado !== 'Pendiente') {
+    if (reservaExistente.estado !== 'pendiente') {
 
       throw new Error('Solo se pueden cancelar reservas pendientes');
 
