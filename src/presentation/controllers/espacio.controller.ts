@@ -50,11 +50,11 @@ export class EspacioController {
 
   }
 
-  @Put()
+  @Put(':id')
 
-  async editar(@Body() dto: EditarEspacioDto) {
+  async editar(@Param('id') id: string, @Body() dto: EditarEspacioDto) {
 
-    await this.editarEspacio.ejecutar(dto);
+    await this.editarEspacio.ejecutar(id, dto);
 
     return { message: 'Espacio editado' };
 

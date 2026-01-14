@@ -1,9 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class EditarEspacioDto {
-  @ApiProperty()
-  id: string;
-
   @ApiProperty({ required: false })
   nombre?: string;
 

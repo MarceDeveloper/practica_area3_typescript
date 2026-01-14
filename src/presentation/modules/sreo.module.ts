@@ -12,6 +12,8 @@ import { RegistrarUsuario } from '../../application/use-cases/registrar-usuario.
 
 import { IniciarSesion } from '../../application/use-cases/iniciar-sesion.use-case';
 
+import { ObtenerPerfil } from '../../application/use-cases/obtener-perfil.use-case';
+
 import { ListarUsuarios } from '../../application/use-cases/listar-usuarios.use-case';
 
 import { EditarUsuario } from '../../application/use-cases/editar-usuario.use-case';
@@ -56,7 +58,7 @@ import { EspacioRepository } from '../../infrastructure/repositories/espacio.rep
 
   controllers: [AuthController, ReservaController, EspacioController, ReportesController],
 
-  providers: [RegistrarUsuario, IniciarSesion, ListarUsuarios, EditarUsuario, EliminarUsuario, CambiarContrasena, CrearReserva, AprobarReserva, RechazarReserva, CancelarReserva, ListarReservasPorUsuario, ListarReservas, CrearEspacio, ListarEspacios, EditarEspacio, EliminarEspacio, GenerarReportes, PoliticasServicio, EmailServicio, UsuarioRepository, ReservaRepository, EspacioRepository],
+  providers: [RegistrarUsuario, IniciarSesion, ObtenerPerfil, ListarUsuarios, EditarUsuario, EliminarUsuario, CambiarContrasena, CrearReserva, AprobarReserva, RechazarReserva, CancelarReserva, ListarReservasPorUsuario, ListarReservas, CrearEspacio, ListarEspacios, EditarEspacio, EliminarEspacio, GenerarReportes, PoliticasServicio, EmailServicio, UsuarioRepository, ReservaRepository, EspacioRepository],
 
 })
 

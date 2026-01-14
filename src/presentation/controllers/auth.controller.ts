@@ -1,8 +1,10 @@
-import { Controller, Post, Get, Put, Delete, Body, Param } from '@nestjs/common';
+import { Controller, Post, Get, Put, Delete, Body, Param, Headers } from '@nestjs/common';
 
 import { RegistrarUsuario } from '../../application/use-cases/registrar-usuario.use-case';
 
 import { IniciarSesion } from '../../application/use-cases/iniciar-sesion.use-case';
+
+import { ObtenerPerfil } from '../../application/use-cases/obtener-perfil.use-case';
 
 import { ListarUsuarios } from '../../application/use-cases/listar-usuarios.use-case';
 
@@ -32,6 +34,8 @@ export class AuthController {
 
     private iniciarSesion: IniciarSesion,
 
+    private obtenerPerfil: ObtenerPerfil,
+
     private listarUsuarios: ListarUsuarios,
 
     private editarUsuario: EditarUsuario,
@@ -56,15 +60,51 @@ export class AuthController {
 
   async login(@Body() dto: IniciarSesionDto) {
 
-    const usuario = await this.iniciarSesion.ejecutar(dto);
+    const resultado = await this.iniciarSesion.ejecutar(dto);
 
-    if (!usuario) {
+    if (!resultado) {
 
       return { message: 'Credenciales invalidas' };
 
     }
 
-    return { message: 'Sesion iniciada', usuarioId: usuario.id };
+    return resultado;
+
+  }
+
+  @Get('profile')
+
+  async profile(@Headers('authorization') authHeader: string) {
+
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+
+      return { message: 'Token no proporcionado' };
+
+    }
+
+    const token = authHeader.substring(7); // Remove 'Bearer '
+
+    // Extraer userId del token (formato: token_{userId}_{timestamp})
+
+    const parts = token.split('_');
+
+    if (parts.length < 2 || parts[0] !== 'token') {
+
+      return { message: 'Token inválido' };
+
+    }
+
+    const userId = parts[1];
+
+    const usuario = await this.obtenerPerfil.ejecutar(userId);
+
+    if (!usuario) {
+
+      return { message: 'Usuario no encontrado' };
+
+    }
+
+    return usuario;
 
   }
 

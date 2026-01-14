@@ -14,7 +14,7 @@ export class IniciarSesion {
 
   constructor(private usuarioRepository: UsuarioRepository) {}
 
-  async ejecutar(dto: IniciarSesionDto): Promise<Usuario | null> {
+  async ejecutar(dto: IniciarSesionDto): Promise<{ usuario: Usuario; token: string } | null> {
 
     const usuario = await this.usuarioRepository.encontrarPorEmail(dto.email);
 
@@ -32,7 +32,10 @@ export class IniciarSesion {
 
     }
 
-    return usuario;
+    // Crear un token simple (en producción usar JWT)
+    const token = `token_${usuario.id}_${Date.now()}`;
+
+    return { usuario, token };
 
   }
 

@@ -12,9 +12,9 @@ export class EditarEspacio {
 
   constructor(private espacioRepository: EspacioRepository) {}
 
-  async ejecutar(dto: EditarEspacioDto): Promise<void> {
+  async ejecutar(id: string, dto: EditarEspacioDto): Promise<void> {
 
-    const espacioExistente = await this.espacioRepository.encontrarPorId(dto.id);
+    const espacioExistente = await this.espacioRepository.encontrarPorId(id);
 
     if (!espacioExistente) {
 
