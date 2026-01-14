@@ -5,8 +5,11 @@ export class ListarEspaciosDto {
   tipo?: string;
 
   @ApiProperty({ required: false })
-  capacidad?: number;
+  capacidadMin?: number;
 
   @ApiProperty({ required: false })
-  descripcion?: string;
+  capacidadMax?: number;
+
+  @ApiProperty({ required: false })
+  nombre?: string;
 }

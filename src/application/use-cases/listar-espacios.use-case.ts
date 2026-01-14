@@ -22,9 +22,11 @@ export class ListarEspacios {
 
       if (dto.tipo && espacio.tipo !== dto.tipo) return false;
 
-      if (dto.capacidad && espacio.capacidad < dto.capacidad) return false;
+      if (dto.capacidadMin && espacio.capacidad < dto.capacidadMin) return false;
 
-      if (dto.descripcion && !espacio.descripcion.includes(dto.descripcion)) return false;
+      if (dto.capacidadMax && espacio.capacidad > dto.capacidadMax) return false;
+
+      if (dto.nombre && !espacio.nombre.toLowerCase().includes(dto.nombre.toLowerCase())) return false;
 
       return true;
 
