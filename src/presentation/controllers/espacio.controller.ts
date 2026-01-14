@@ -1,10 +1,20 @@
-import { Controller, Post, Get, Body, Query } from '@nestjs/common';
+import { Controller, Post, Get, Put, Delete, Body, Query, Param } from '@nestjs/common';
 
 import { CrearEspacio } from '../../application/use-cases/crear-espacio.use-case';
 
 import { ListarEspacios } from '../../application/use-cases/listar-espacios.use-case';
 
+import { EditarEspacio } from '../../application/use-cases/editar-espacio.use-case';
+
+import { EliminarEspacio } from '../../application/use-cases/eliminar-espacio.use-case';
+
 import { CrearEspacioDto } from '../../application/dtos/crear-espacio.dto';
+
+import { EditarEspacioDto } from '../../application/dtos/editar-espacio.dto';
+
+import { EliminarEspacioDto } from '../../application/dtos/eliminar-espacio.dto';
+
+import { ListarEspaciosDto } from '../../application/dtos/listar-espacios.dto';
 
 @Controller('espacios')
 
@@ -15,6 +25,10 @@ export class EspacioController {
     private crearEspacio: CrearEspacio,
 
     private listarEspacios: ListarEspacios,
+
+    private editarEspacio: EditarEspacio,
+
+    private eliminarEspacio: EliminarEspacio,
 
   ) {}
 
@@ -30,25 +44,29 @@ export class EspacioController {
 
   @Get()
 
-  async listar(@Query() query: any) {
+  async listar(@Query() query: ListarEspaciosDto) {
 
-    const espacios = await this.listarEspacios.ejecutar();
+    return this.listarEspacios.ejecutar(query);
 
-    let filtrados = espacios;
+  }
 
-    if (query.tipo) {
+  @Put()
 
-      filtrados = filtrados.filter(e => e.tipo === query.tipo);
+  async editar(@Body() dto: EditarEspacioDto) {
 
-    }
+    await this.editarEspacio.ejecutar(dto);
 
-    if (query.capacidad) {
+    return { message: 'Espacio editado' };
 
-      filtrados = filtrados.filter(e => e.capacidad >= parseInt(query.capacidad));
+  }
 
-    }
+  @Delete(':id')
 
-    return filtrados;
+  async eliminar(@Param('id') id: string) {
+
+    await this.eliminarEspacio.ejecutar({ id });
+
+    return { message: 'Espacio eliminado' };
 
   }
 

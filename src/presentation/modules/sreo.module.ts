@@ -14,15 +14,31 @@ import { IniciarSesion } from '../../application/use-cases/iniciar-sesion.use-ca
 
 import { ListarUsuarios } from '../../application/use-cases/listar-usuarios.use-case';
 
+import { EditarUsuario } from '../../application/use-cases/editar-usuario.use-case';
+
+import { EliminarUsuario } from '../../application/use-cases/eliminar-usuario.use-case';
+
+import { CambiarContrasena } from '../../application/use-cases/cambiar-contrasena.use-case';
+
 import { CrearReserva } from '../../application/use-cases/crear-reserva.use-case';
 
 import { AprobarReserva } from '../../application/use-cases/aprobar-reserva.use-case';
 
+import { RechazarReserva } from '../../application/use-cases/rechazar-reserva.use-case';
+
+import { CancelarReserva } from '../../application/use-cases/cancelar-reserva.use-case';
+
 import { ListarReservasPorUsuario } from '../../application/use-cases/listar-reservas-por-usuario.use-case';
+
+import { ListarReservas } from '../../application/use-cases/listar-reservas.use-case';
 
 import { CrearEspacio } from '../../application/use-cases/crear-espacio.use-case';
 
 import { ListarEspacios } from '../../application/use-cases/listar-espacios.use-case';
+
+import { EditarEspacio } from '../../application/use-cases/editar-espacio.use-case';
+
+import { EliminarEspacio } from '../../application/use-cases/eliminar-espacio.use-case';
 
 import { GenerarReportes } from '../../application/use-cases/generar-reportes.use-case';
 
@@ -40,7 +56,7 @@ import { EspacioRepository } from '../../infrastructure/repositories/espacio.rep
 
   controllers: [AuthController, ReservaController, EspacioController, ReportesController],
 
-  providers: [RegistrarUsuario, IniciarSesion, ListarUsuarios, CrearReserva, AprobarReserva, ListarReservasPorUsuario, CrearEspacio, ListarEspacios, GenerarReportes, PoliticasServicio, EmailServicio, UsuarioRepository, ReservaRepository, EspacioRepository],
+  providers: [RegistrarUsuario, IniciarSesion, ListarUsuarios, EditarUsuario, EliminarUsuario, CambiarContrasena, CrearReserva, AprobarReserva, RechazarReserva, CancelarReserva, ListarReservasPorUsuario, ListarReservas, CrearEspacio, ListarEspacios, EditarEspacio, EliminarEspacio, GenerarReportes, PoliticasServicio, EmailServicio, UsuarioRepository, ReservaRepository, EspacioRepository],
 
 })
 

@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Body } from '@nestjs/common';
+import { Controller, Post, Get, Put, Delete, Body, Param } from '@nestjs/common';
 
 import { RegistrarUsuario } from '../../application/use-cases/registrar-usuario.use-case';
 
@@ -6,9 +6,21 @@ import { IniciarSesion } from '../../application/use-cases/iniciar-sesion.use-ca
 
 import { ListarUsuarios } from '../../application/use-cases/listar-usuarios.use-case';
 
+import { EditarUsuario } from '../../application/use-cases/editar-usuario.use-case';
+
+import { EliminarUsuario } from '../../application/use-cases/eliminar-usuario.use-case';
+
+import { CambiarContrasena } from '../../application/use-cases/cambiar-contrasena.use-case';
+
 import { CrearUsuarioDto } from '../../application/dtos/crear-usuario.dto';
 
 import { IniciarSesionDto } from '../../application/dtos/iniciar-sesion.dto';
+
+import { EditarUsuarioDto } from '../../application/dtos/editar-usuario.dto';
+
+import { EliminarUsuarioDto } from '../../application/dtos/eliminar-usuario.dto';
+
+import { CambiarContrasenaDto } from '../../application/dtos/cambiar-contrasena.dto';
 
 @Controller('auth')
 
@@ -21,6 +33,12 @@ export class AuthController {
     private iniciarSesion: IniciarSesion,
 
     private listarUsuarios: ListarUsuarios,
+
+    private editarUsuario: EditarUsuario,
+
+    private eliminarUsuario: EliminarUsuario,
+
+    private cambiarContrasena: CambiarContrasena,
 
   ) {}
 
@@ -55,6 +73,36 @@ export class AuthController {
   async listar() {
 
     return await this.listarUsuarios.ejecutar();
+
+  }
+
+  @Put('users')
+
+  async editar(@Body() dto: EditarUsuarioDto) {
+
+    await this.editarUsuario.ejecutar(dto);
+
+    return { message: 'Usuario editado' };
+
+  }
+
+  @Delete('users/:id')
+
+  async eliminar(@Param('id') id: string) {
+
+    await this.eliminarUsuario.ejecutar({ id });
+
+    return { message: 'Usuario eliminado' };
+
+  }
+
+  @Post('change-password')
+
+  async cambiar(@Body() dto: CambiarContrasenaDto) {
+
+    await this.cambiarContrasena.ejecutar(dto);
+
+    return { message: 'Contraseña cambiada' };
 
   }
 

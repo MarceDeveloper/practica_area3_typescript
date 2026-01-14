@@ -58,4 +58,32 @@ export class UsuarioRepository implements UsuarioRepositorio {
 
   }
 
+  async actualizar(usuario: Usuario): Promise<void> {
+
+    await this.prisma.usuario.update({
+
+      where: { id: usuario.id },
+
+      data: {
+
+        nombre: usuario.nombre,
+
+        email: usuario.email,
+
+        contrasenaHash: usuario.contrasenaHash,
+
+        rol: usuario.rol,
+
+      },
+
+    });
+
+  }
+
+  async eliminar(id: string): Promise<void> {
+
+    await this.prisma.usuario.delete({ where: { id } });
+
+  }
+
 }

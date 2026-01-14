@@ -5,4 +5,6 @@ export interface UsuarioRepositorio {
   encontrarPorEmail(email: string): Promise<Usuario | null>;
   encontrarTodos(): Promise<Usuario[]>;
   guardar(usuario: Usuario): Promise<void>;
+  actualizar(usuario: Usuario): Promise<void>;
+  eliminar(id: string): Promise<void>;
 }
